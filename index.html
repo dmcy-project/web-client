@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+	<!-- Custom styles for this template -->
+    <link href="main.css" rel="stylesheet">
+    <title>DMCY</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top">
+      <a class="navbar-brand" href="#"><strong id="appName">DMCY</strong><small id="appNameSub"></small></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/dmcy-project">Github</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" id="show-whitelist" data-toggle="modal" data-target="#whitelistModal">白名单</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" id="show-blacklist" data-toggle="modal" data-target="#blacklistModal">黑名单</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle disabled" href="#" id="dropdown-func" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">功能列表</a>
+            <div class="dropdown-menu" aria-labelledby="dropdown-func">
+              <a class="dropdown-item" href="#" id="show-post" data-toggle="modal" data-target="#postModal">发布</a>
+              <a class="dropdown-item" href="#" id="show-refund" data-toggle="modal" data-target="#refundModal">退押金</a>
+              <a class="dropdown-item" href="#" id="show-closeuser" data-toggle="modal" data-target="#closeuserModal">清除用户记录</a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" id="login-scatter">使用Scatter登录</a>
+          </li>
+        </ul>
+        <div class="input-group input-group-sm col-sm-5">
+          <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">API节点</span>
+          </div>
+          <select class="custom-select custom-select-sm" id="apiNodesSelect" aria-label="API Nodes">
+          </select>
+          <div class="input-group-append">
+              <span class="input-group-text"><span id="apiNodesStatus">状态</span></span>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main role="main" class="container-fluid">
+        <div class="toast" style="position: fixed; top: 60px; right: 0; z-index: 2050;">
+            <div class="toast-header">
+              <strong id="notifyTitle"></strong>
+              <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="toast-body" id="notifyContent">
+            </div>
+        </div>
+      <div class="content-table">
+
+        <div><p>共<span id="totalPostsCount"></span>条记录</p></div>
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th scope="col" width="110">发布日期</th>
+              <th scope="col" width="60">分类</th>
+              <th scope="col">标题</th>
+              <th scope="col" width="40">磁链</th>
+              <th scope="col" width="80">大小</th>
+              <th scope="col" width="100">发布人</th>
+            </tr>
+          </thead>
+          <tbody id="postsTable">
+          </tbody>
+        </table>
+        <button class="btn btn-success" id="loadPosts" type="button">
+          <span class="spinner-border spinner-border-sm d-none" id="loadPostsSpin" role="status" aria-hidden="true"></span>
+          加载更多
+        </button>
+      </div>
+      <pre style="width: 100%; height: 100%; margin:0px;" id="debugPre"></pre>
+      <!-- Description Modal -->
+      <div class="modal fade" id="descriptionModal" tabindex="-1" role="dialog" aria-labelledby="descriptionModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="descriptionModalLabel"></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" id='descriptionContent'>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+            </div>
+          </div>
+        </div>
+      </div> 
+      <!-- Whitelist Modal -->
+      <div class="modal fade" id="whitelistModal" tabindex="-1" role="dialog" aria-labelledby="whitelistModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="whitelistModalLabel">白名单</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="content-table">
+                <table class="table table-sm">
+                  <thead>
+                    <tr>
+                      <th scope="col" width="120">账号名</th>
+                      <th scope="col" >显示名</th>
+                    </tr>
+                  </thead>
+                  <tbody id="whitelistTable">
+                  </tbody>
+                </table>
+              </div>
+              <div class="input-group input-group-sm mb-3" id="addWhitelistGroup">
+                <input type="text" aria-label="账号名" placeholder="账号名" id="wlName" class="form-control">
+                <input type="text" aria-label="显示名" placeholder="显示名" id="wlDisName" class="form-control">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-secondary" type="button" id="addWhitelist">加入白名单</button>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+              <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Blacklist Modal -->
+      <div class="modal fade" id="blacklistModal" tabindex="-1" role="dialog" aria-labelledby="blacklistModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="blacklistModalLabel">黑名单</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="content-table">
+                <table class="table table-sm">
+                  <thead>
+                    <tr>
+                      <th scope="col" width="120">账号名</th>
+                      <th scope="col" >黑名单起始时间</th>
+                      <th scope="col" >Epoch Time</th>
+                    </tr>
+                  </thead>
+                  <tbody id="blacklistTable">
+                  </tbody>
+                </table>
+              </div>
+              <div class="input-group input-group-sm mb-3" id="addBlacklistGroup">
+                <input type="text" aria-label="账号名" placeholder="账号名" id="blName" class="form-control">
+                <input type="text" aria-label="时间" placeholder="时间" id="blTime" class="form-control">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-secondary" type="button" id="addBlacklist">加入黑名单</button>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+              <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+            </div>
+          </div>
+        </div>
+      </div>    
+      <!-- Post Modal -->
+      <div class="modal fade" id="postModal" tabindex="-1" role="dialog" aria-labelledby="postModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="postModalLabel">发布</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form id="postForm" novalidate>
+                <div class="form-group">
+                  <label for="postInputTitle">标题</label>
+                  <input type="text" class="form-control" id="postInputTitle" name="title" aria-describedby="postTitleHelp" placeholder="请输入标题" required>
+                  <small id="postTitleHelp" class="form-text text-muted">标题长度限制：大于10字节，小于200字节</small>
+                </div>
+                <div class="form-group">
+                  <label for="postInputType">分类</label>
+                  <select id="postInputType" class="form-control col-md-3">
+                      <option selected>动画</option>
+                      <option>漫画</option>
+                      <option>音乐</option>
+                      <option>游戏</option>
+                      <option>其它</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="postInputMagnet">磁链</label>
+                  <input type="text" class="form-control" id="postInputMagnet" name="magnet" aria-describedby="postMagnetHelp" placeholder="magnet:" required>
+                  <small id="postMagnetHelp" class="form-text text-muted">磁链长度限制：大于50字节，小于2000字节</small>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-3">
+                    <label for="postInputSize">大小</label>
+                    <input type="number" class="form-control" id="postInputSize" name="size" aria-describedby="postSizeHelp" placeholder="请输入大小" required>
+                    <small id="postSizeHelp" class="form-text text-muted">需为大于0的整数</small>
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label for="postInputSizeUnit">单位</label>
+                    <select id="postInputSizeUnit" class="form-control">
+                      <option>KB</option>
+                      <option selected>MB</option>
+                      <option>GB</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="postInputDescription">简介（使用Markdown语法，长度需小于2000字节）</label>
+                  <textarea class="form-control" id="postInputDescription" rows="3" name="description" aria-describedby="postDescriptionHelp"></textarea>
+                  <small id="postDescriptionHelp" class="form-text text-muted">
+                    插入图片：![替代文字](https://图片地址链接)
+                  </small>
+                </div>
+                <div class="alert alert-warning" role="alert">
+                  发布内容规则与动漫花园一致，那里不许发的内容这里也不许发。违规会被拉黑名单并没收押金。
+                </div>
+                <small id="postSubmitHelp" class="form-text"></small>
+                <button type="submit" id="postInputSubmit" class="btn btn-success" aria-describedby="postSubmitHelp">提交发布</button>
+                
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+            </div>
+          </div>
+        </div>
+      </div>  
+      <!-- Refund Modal -->
+      <div class="modal fade" id="refundModal" tabindex="-1" role="dialog" aria-labelledby="refundModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="refundModalLabel">退押金</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <p>发布内容48小时后才可退押金。可退押金记录行文字会以绿色显示。退押金请点绿色文字行的Epoch Time项。黑名单账号不可退押金。 </p>
+                <div class="content-table">
+                  <table class="table table-sm">
+                    <thead>
+                      <tr>
+                        <th scope="col" >押金数额</th>
+                        <th scope="col" >支付押金时间</th>
+                        <th scope="col" >可退押金时间</th>
+                        <th scope="col" >Epoch Time</th>
+                      </tr>
+                    </thead>
+                    <tbody id="refundTable">
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+              </div>
+            </div>
+          </div>
+        </div>          
+      <!-- Close User Modal -->
+      <div class="modal fade" id="closeuserModal" tabindex="-1" role="dialog" aria-labelledby="closeuserModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="closeuserModalLabel">清除用户记录</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <p>清除用户记录会清除用户最后一次发布内容的时间，用来彻底释放此应用占用的用户RAM资源。
+                  在发布内容10分钟后才可调用此功能。
+                </p>
+                <button type="button" class="btn btn-success" id="closeuserSubmit">清除用户记录</button>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+              </div>
+            </div>
+          </div>
+        </div> 
+      </main><!-- /.container -->
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.scattercdn.com/file/scatter-cdn/js/latest/scatterjs-core.min.js"></script>
+    <!-- <script src="https://cdn.scattercdn.com/file/scatter-cdn/js/latest/scatterjs-plugin-eosjs2.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src='scatterjs-plugin-eosjs2.min.js'></script>
+    <script src='eosjs-api.js'></script>
+    <script src='eosjs-jsonrpc.js'></script>
+    <script src='eosjs-jssig.js'></script>
+    <script src="config.js"></script>
+	  <script src="main.js"></script>
+  </body>
+</html>

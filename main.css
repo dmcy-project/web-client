@@ -1,0 +1,46 @@
+body {
+  padding-top: 5rem;
+  background-color: #effce6;
+}
+a {
+  color: #106351;
+}
+a:hover {
+  color: #2b9c46;
+}
+nav {
+  background-color: #24863b;
+}
+
+.content-table {
+  padding: 3rem 0rem;
+  text-align: center;
+  font-size: 14px;
+  position: relative;
+}
+
+.title {
+  text-align: left;
+}
+
+.table thead th,
+.table th,
+tr,
+th,
+td {
+  background-color: #e7f7db;
+  vertical-align: center;
+  border-right: #00aa00 1px solid;
+  border-top: #00aa00 1px solid;
+  border-left: #00aa00 1px solid;
+  border-bottom: #00aa00 1px solid;
+}
+
+.magnet {
+  width: 12px;
+  height: 12px;
+}
+
+.modal-content {
+  background-color: #effce6;
+}
