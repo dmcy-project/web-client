@@ -197,6 +197,7 @@ async function loadPosts(pos, offset, clearTable) {
       else if (data.type === "comic") typeText = "漫画";
       else if (data.type === "music") typeText = "音乐";
       else if (data.type === "game") typeText = "游戏";
+      else if (data.type === "raw") typeText = "RAW";
       else typeText = "其它";
       $("#postsTable").append(`<tr>
       <td title="${postEpochTime}">${formatDate(
@@ -583,6 +584,7 @@ $(function() {
     else if (typeText === "漫画") type = "comic";
     else if (typeText === "音乐") type = "music";
     else if (typeText === "游戏") type = "game";
+    else if (typeText === "RAW") type = "raw";
     else type = "other";
     const sizeText = $("#postInputSizeUnit").val();
     let size = Number($("#postInputSize").val());
